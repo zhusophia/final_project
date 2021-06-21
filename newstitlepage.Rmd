@@ -1,0 +1,35 @@
+---
+title: <b> Fake News </b>
+subtitle: "An analysis of Fake News Headlines so YOU can spread some fake news today!"
+date: "2021-06-20"
+author: "Sophia Zhu"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+```
+
+```{r, echo = FALSE}
+titledata <- read.csv("newstitle1.csv")
+titledata %>%
+  select(title, category) %>%
+  slice(1:3000) %>% 
+  mutate(title = strsplit(as.character(title), " ")) %>% 
+  unnest(title) %>% 
+  group_by(title) %>% 
+  summarize(total = n()) %>% 
+  arrange(desc(total)) %>% 
+  slice(1:10) %>% 
+
+ggplot(mapping = aes(x = reorder(title, total), y = total))+
+  geom_col(fill = "darkseagreen3")+
+  theme_classic()+
+  coord_flip()+
+labs(title = "Most Common Words in Fake News Headlines", 
+     subtitle = "Wow! What a diverse range of words, could totally make a headline out of it!", y = "Amount of Times it has Appeared in a Headline", x = "Word", caption = "Source: BuzzFeed News")
+```
+
